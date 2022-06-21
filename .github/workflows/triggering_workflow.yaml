@@ -1,0 +1,16 @@
+name: Triggering workflow
+on:
+ workflow_dispatch:
+ 
+ 
+jobs:
+ trigger:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Invoke workflow without inputs.
+     uses: aurelien-baudet/workflow-dispatch@v2
+     with:
+       # curl https://api.github.com/repos/{{owner}}/{{repo}}/actions/workflows -H "Authorization: token {{token}}" | jq --color-output
+       workflow: CI workflow for calculator app
+       # generate PAT: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+       token: ${{ secrets.PAT }}
