@@ -15,6 +15,30 @@ jobs:
        with:
          node-version: '14'
  
-     - run: ./ci.sh
+     # - run: ./ci.sh
  
+     # - run: npm test
+     - run: |
+         exit 1
+ 
+     - name: always
+       if: ${{ always() }}
+       run:
+         echo "on always"
+ 
+     - name: failure
+       if: ${{ failure() }}
+       run:
+         echo "on falure"
+ 
+     - name: normal
+       run:
+         echo "normal"
      - run: npm test
+       if: ${{ github.ref == 'refs/heads/main' }}
+       # Other contexts:
+       # - github - Information about the workflow run. For more information, see github context.
+       # - env -   Contains environment variables set in a workflow, job, or step. For more information, see env context.
+       # - job - Information about the currently running job. For more information, see job context.
+       # - steps - Information about the steps that have been run in the current job. For more information, see steps context.
+       # - runner - Information about the runner that is running the current job. For more information, see runner context.
