@@ -1,7 +1,21 @@
+
 name: CI for calcualator app
 on:
  push:
+   # branches:
+   branches:
+     - main
+     - develop
+     - 'releases/**'
+   tags:
+     - v2
+     - v1.*
  
+   paths-ignore:
+     - 'node_modules/**'
+     - 'README.md'
+ 
+ workflow_dispatch:
  
 env:
  TEST: workflow scope
@@ -13,6 +27,10 @@ jobs:
    env:
      TEST: job scope
  
+   environment: production
+ 
+ 
+ 
    steps:
      - run: echo "Hello Action"
     
@@ -23,16 +41,19 @@ jobs:
        with:
          node-version: '14'
  
-     # - run: ./ci.sh
-     - run: |
-         echo "${{ env.TEST }}"
- 
-     - run: npm test
-       if: ${{ github.ref == 'refs/heads/main' }}
- 
-
-
+     - name: Set variable
+       run: echo "TEST=in_step" >> $GITHUB_ENV
+      
      - run: |
          echo $TEST_IN_STEP
        env:
          TEST_IN_STEP: ${{ env.TEST }}
+ 
+     - run: |
+         echo $secret
+       env:
+         secret: ${{ secrets.MY_SECRET }}
+ 
+ 
+     - run: npm test
+       if: ${{ github.ref == 'refs/heads/main' }}
