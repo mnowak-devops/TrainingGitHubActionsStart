@@ -1,0 +1,63 @@
+name: CI for calcualator app
+on:
+ push:
+   # branches:
+   branches:
+     - main
+     - develop
+     - 'releases/**'
+   tags:
+     - v2
+     - v1.*
+ 
+   paths-ignore:
+     - 'node_modules/**'
+     - 'README.md'
+ 
+ workflow_dispatch:
+   inputs:
+     message:
+       description: 'Why are you running it?'    
+       required: true
+       type: string
+ 
+env:
+ TEST: workflow scope
+ TEST2: test2
+ 
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   env:
+     TEST: job scope
+ 
+   environment: production
+ 
+ 
+ 
+   steps:
+     - run: echo "Hello Action"
+    
+     - uses: actions/checkout@v2
+    
+     - name: Use Node.js
+       uses: actions/setup-node@v3
+       with:
+         node-version: '14'
+ 
+     - name: Set variable
+       run: echo "TEST=in_step" >> $GITHUB_ENV
+      
+     - run: |
+         echo $TEST_IN_STEP
+       env:
+         TEST_IN_STEP: ${{ env.TEST }}
+ 
+     - run: |
+         echo $secret
+       env:
+         secret: ${{ secrets.MY_SECRET }}
+ 
+ 
+     - run: npm test
+       if: ${{ github.ref == 'refs/heads/main' }}
